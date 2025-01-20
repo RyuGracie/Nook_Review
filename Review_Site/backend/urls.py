@@ -3,5 +3,5 @@ from .views import IslandListView
 
 
 urlpatterns = [
-    path('island', IslandListView.as_view()),
+    path('islands', IslandListView.as_view()),
 ]
