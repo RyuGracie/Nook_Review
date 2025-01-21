@@ -1,4 +1,4 @@
-import { Island } from "../type";
+import { Island } from "../client/type";
 
 export default function IslandTile({ island }: { island: Island }) {
   return (

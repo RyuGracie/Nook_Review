@@ -1,32 +1,18 @@
-import { useEffect, useState } from "react";
 import IslandTile from "./components/island_tile";
-import { Island } from "./type";
+import { api } from "./client/client";
 
 export default function Islands() {
-  const [islands, setIslands] = useState<Island[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {data: islands, isLoading} = api.useAllIslands();
 
-  function fetchIslands() {
-    fetch("/api/islands")
-      .then((response) => response.json())
-      .then((data) => {
-        setIslands(data);
-        setLoading(false);
-      });
-  }
 
-  useEffect(() => {
-    fetchIslands();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
     <>
       <div className="flex flex-row items-center justify-center bg-slate-800 p-4">
-        {islands.map((island) => (
+        {islands?.map((island) => (
           <IslandTile key={island.dream_code} island={island} />
         ))}
       </div>
