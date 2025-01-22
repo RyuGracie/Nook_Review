@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-
+from drf_extra_fields.fields import Base64ImageField
 from .models import Island, Review
 
 class UserSerializer(serializers.ModelSerializer):
@@ -9,6 +9,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username', 'email']
         
 class IslandSerializer(serializers.ModelSerializer):
+    owner = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True
+    )
+    image = Base64ImageField(required=True, represent_in_base64=True)
     class Meta:
         model = Island
         fields = [ 'owner', 'dream_code', 'name', 'description', 'image']
