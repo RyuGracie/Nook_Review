@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 import { twMerge } from "tailwind-merge";
 
 type BaseButtonProps = {
@@ -35,7 +35,7 @@ export default function Button({
       {children}
     </button>
   ) : (
-    <Link
+    <NavLink
       to={to}
       className={twMerge(
         "rounded-xl px-7 py-3 text-base font-semibold text-white transition duration-300 ease-in-out hover:bg-slate-800/35",
@@ -43,6 +43,6 @@ export default function Button({
       )}
     >
       {children}
-    </Link>
+    </NavLink>
   );
 }

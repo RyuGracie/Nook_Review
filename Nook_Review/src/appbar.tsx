@@ -28,7 +28,7 @@ export default function Appbar() {
               </button>
               <nav
                 id="navbarCollapse"
-                className={`absolute -right-4 top-full w-full max-w-[125px] rounded-l-lg bg-white px-4 py-3 shadow lg:static lg:right-0 lg:block lg:w-full lg:max-w-full lg:bg-transparent lg:shadow-none ${
+                className={`absolute -right-4 top-full z-50 w-full max-w-[125px] rounded-l-lg bg-white px-4 py-3 shadow lg:static lg:right-0 lg:block lg:w-full lg:max-w-full lg:bg-transparent lg:shadow-none ${
                   !open && "hidden"
                 } `}
               >

@@ -6,6 +6,7 @@ import Main_Page from "./main_page.tsx";
 import Appbar from "./appbar.tsx";
 import Islands from "./islands.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import IslandPage from "./islandPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route index element={<Main_Page />} />
           <Route path="/islands" element={<Islands />} />
+          <Route path="/island/:islandName" element={<IslandPage />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
