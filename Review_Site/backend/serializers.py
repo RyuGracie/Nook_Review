@@ -16,9 +16,19 @@ class IslandSerializer(serializers.ModelSerializer):
     image = Base64ImageField(required=True, represent_in_base64=True)
     class Meta:
         model = Island
-        fields = [ 'owner', 'dream_code', 'name', 'description', 'image']
+        fields = "__all__"
 
 class ReviewSerializer(serializers.ModelSerializer):
+    owner = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True
+    )
     class Meta:
         model = Review
-        fields = ['id_island', 'owner', 'aesth_rating', 'motif_rating', 'creat_rating', 'rating', 'date']
+        fields = "__all__"
+    
+    # def create(self, validated_data):
+    #     review = Review.objects.create(**validated_data)
+    #     review.rating = round((review.aesth_rating + review.motif_rating + review.creat_rating) / 3)
+    #     review.save()
+    #     return review

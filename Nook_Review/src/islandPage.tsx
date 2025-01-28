@@ -1,5 +1,8 @@
 import { useLocation, useParams } from "react-router";
 import { Island } from "./client/type";
+import ReviewForm from "./components/review_form";
+import { api } from "./client/client";
+import ReviewTile from "./components/review_tile";
 
 type IslandPageParams = {
   islandName: string;
@@ -11,16 +14,24 @@ export default function IslandPage() {
   const location = useLocation();
   const island = location.state?.island as Island;
 
+  const { data: reviews, isLoading } = api.useAllReviews(island);
+
+  console.log(island);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="bg-sandy flex min-h-screen w-full flex-col items-start justify-start rounded-2xl p-4 text-slate-900">
-      <div className="item-center flex h-min w-full flex-col rounded-2xl bg-white p-4 text-slate-900 shadow-lg shadow-slate-400/50 transition-all duration-150 sm:flex-row">
+    <div className="flex min-h-screen w-full flex-col items-start justify-start gap-4 bg-sandy p-4 text-slate-900">
+      <div className="item-center flex h-min w-full flex-col rounded-2xl bg-white p-4 text-slate-900 shadow-md shadow-slate-400/50 transition-all duration-150 sm:flex-row">
         <img
           src={`data:image/jpeg;base64,${island.image}`}
           alt={island.name}
           className="m-4 aspect-video rounded-xl border-2 object-cover sm:w-2/5"
         />
         <div className="flex h-full flex-col items-start justify-center gap-3 p-4">
-          <h1 className="text-3xl font-bold sm:text-5xl lg:text-7xl">
+          <h1 className="text-3xl font-bold sm:text-4xl lg:text-6xl">
             {islandName}
           </h1>
           <label className="text-xl font-medium">Player: {island.owner}</label>
@@ -33,6 +44,14 @@ export default function IslandPage() {
               {island.description}
             </p>
           </div>
+        </div>
+      </div>
+      <div className="flex w-full flex-col items-start justify-start gap-4">
+        <ReviewForm />
+        <div className="flex w-full flex-col items-start justify-start gap-4">
+          {reviews?.map((review) => (
+            <ReviewTile key={review.id} review={review} />
+          ))}
         </div>
       </div>
     </div>

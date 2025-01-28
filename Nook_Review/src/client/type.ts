@@ -6,3 +6,14 @@ export interface Island {
   dream_code: string;
   owner: string;
 }
+
+export interface Review {
+  id: number;
+  owner: string;
+  aesth_rating: number;
+  motif_rating: number;
+  creat_rating: number;
+  rating: number;
+  comment: string;
+  date: string;
+}
