@@ -9,7 +9,7 @@ interface ReviewFormInput {
   review: string;
 }
 
-export default function ReviewForm() {
+export default function ReviewForm({ disabled }: { disabled: boolean }) {
   const {
     control,
     register,
@@ -74,7 +74,11 @@ export default function ReviewForm() {
             {...register("review")}
             className="h-full rounded-md p-2 ring-1 ring-slate-500"
           />
-          <Button onClick={handleSubmit(onSubmit)} className="text-black">
+          <Button
+            disabled={disabled}
+            onClick={handleSubmit(onSubmit)}
+            className="text-black"
+          >
             Submit
           </Button>
         </div>

@@ -46,8 +46,10 @@ export default function IslandPage() {
           </div>
         </div>
       </div>
-      <div className="flex w-full flex-col items-start justify-start gap-4">
-        <ReviewForm />
+      <div className="flex w-full flex-row items-start justify-start gap-4">
+        <div className="flex h-full flex-col">
+          <ReviewForm disabled={false} />
+        </div>
         <div className="flex w-full flex-col items-start justify-start gap-4">
           {reviews?.map((review) => (
             <ReviewTile key={review.id} review={review} />

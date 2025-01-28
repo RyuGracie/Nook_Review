@@ -34,16 +34,20 @@ class IslandReviewListCreateView(mixins.ListModelMixin, mixins.CreateModelMixin,
         """
         Filters the reviews based on the island ID passed in the URL.
         """
-        island_id = self.kwargs.get('id_island')  # Get the island ID from the URL
-        return Review.objects.filter(id_island=island_id)
+        dream_code = self.kwargs.get('dream_code')  # Get dream_code from the URL
+        return Review.objects.filter(id_island__dream_code=dream_code)
+
+    def perform_create(self, serializer):
+        """
+        Set the owner to the authenticated user and assign the island based on dream_code.
+        """
+        dream_code = self.kwargs.get('dream_code')  # Get dream_code from the URL
+        try:
+            island = Island.objects.get(dream_code=dream_code)  # Find the Island
+            serializer.save(owner=self.request.user, id_island=island)
+        except Island.DoesNotExist:
+            raise serializers.ValidationError({"detail": "Island with this dream code does not exist."})
 
     # Handle GET requests for listing reviews
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        """
-        Set the owner to the authenticated user and assign the island ID.
-        """
-        island_id = self.kwargs.get('id_island')  # Get the island ID from the URL
-        serializer.save(owner=self.request.user, id_island_id=island_id)
