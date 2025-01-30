@@ -7,9 +7,9 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 from backend import serializers
 
-# CHANGE ALL THAT SHIT TO JUST BASIC TOKEN AUTHORIZATION
 
 # Generate JWT tokens for user
 def get_tokens_for_user(user):
@@ -18,7 +18,7 @@ def get_tokens_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
-
+        
 class IslandListView(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
@@ -26,6 +26,15 @@ class IslandListView(APIView):
         serializer = IslandSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class IslandCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self, request):
+        serializer = IslandSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class IslandReviewListCreateView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -74,10 +83,3 @@ class RegisterView(APIView):
 
         user = User.objects.create_user(username=username, password=password)
         return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
-
-# Protected Route Example
-class ProtectedView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        return Response({'message': f'Hello, {request.user.username}!'}, status=status.HTTP_200_OK)

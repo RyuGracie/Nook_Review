@@ -9,6 +9,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import IslandPage from "./islandPage.tsx";
 import Login from "./login.tsx";
 import { AuthProvider } from "./components/authContext.tsx";
+import Signup from "./signup.tsx";
+import UserIslandPage from "./usersIsland.tsx";
+import RegisterIsland from "./registerIsland.tsx";
+import UserPage from "./userPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +27,12 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/islands" element={<Islands />} />
             <Route path="/island/:islandName" element={<IslandPage />} />
             <Route path="/login" element={<Login />} />
+            <Route path="*" element={<h1>404 Not Found</h1>} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/:username/" element={<UserPage />}>
+              <Route path="island" element={<UserIslandPage />} />
+              <Route path="register-island" element={<RegisterIsland />} />
+            </Route>
           </Routes>
         </AuthProvider>
       </BrowserRouter>

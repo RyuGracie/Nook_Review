@@ -5,6 +5,7 @@ export interface Island {
   image: string;
   dream_code: string;
   owner: string;
+  started: Date;
 }
 
 export interface Review {
@@ -23,4 +24,12 @@ export interface ReviewFormInput {
   motif_rating: number;
   creat_rating: number;
   comment: string;
+}
+
+export interface IslandFormInput {
+  name: string;
+  description: string;
+  image: string;
+  dream_code: string;
+  started: Date;
 }

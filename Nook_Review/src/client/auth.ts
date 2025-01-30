@@ -77,7 +77,7 @@ client.interceptors.response.use(
 export const useRegister = () => {
   return useMutation({
     mutationFn: async (credentials: AuthCredentials) => {
-      const response = await client.post("/users/", credentials);
+      const response = await client.post("/register/", credentials);
       return response.data;
     },
   });

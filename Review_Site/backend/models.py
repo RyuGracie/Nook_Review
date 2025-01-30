@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Island(models.Model):
     id_island = models.AutoField(primary_key=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE )
     dream_code = models.CharField(max_length=100, blank=False, unique=True)
     name = models.CharField(max_length=100, blank=False)
     description = models.TextField(blank=False)
@@ -12,6 +12,8 @@ class Island(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
 
 class Review(models.Model):
     id_review = models.AutoField(primary_key=True)

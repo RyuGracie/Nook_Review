@@ -1,9 +1,9 @@
 import { useLocation, useParams } from "react-router";
-import { Island } from "./client/type";
+import { Island, Review } from "./client/type";
 import ReviewForm from "./components/review_form";
 import { api } from "./client/client";
 import ReviewTile from "./components/review_tile";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 type IslandPageParams = {
   islandName: string;
@@ -18,21 +18,25 @@ export default function IslandPage() {
   const island = location.state?.island as Island;
 
   const [, setRefreshKey] = useState(0);
+  const [disable, setDisable] = useState(false);
 
   const { data: reviews, isLoading } = api.useAllReviews(island);
 
   console.log(island);
 
+  useEffect(() => {
+    setDisable(
+      (reviews?.some(
+        (review: Review) => localStorage.getItem("username") === review.owner,
+      ) ??
+        false) ||
+        !localStorage.getItem("username"),
+    );
+  }, [reviews]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
-  const disable =
-    (reviews?.some(
-      (review) => localStorage.getItem("username") === review.owner,
-    ) ??
-      false) ||
-    !localStorage.getItem("username");
 
   return (
     <IslandContext.Provider value={island}>
@@ -65,7 +69,10 @@ export default function IslandPage() {
           <div className="flex h-full flex-col">
             <ReviewForm
               disabled={disable}
-              onReviewPosted={() => setRefreshKey((prev) => prev + 1)}
+              onReviewPosted={() => {
+                setRefreshKey((prev) => prev + 1);
+                setDisable(true);
+              }}
             />
             {disable && (
               <p className="font-bold text-red-500">
@@ -74,7 +81,7 @@ export default function IslandPage() {
             )}
           </div>
           <div className="flex w-full flex-col items-start justify-start gap-4">
-            {reviews?.map((review) => (
+            {reviews?.map((review: Review) => (
               <ReviewTile key={review.id} review={review} />
             ))}
           </div>
