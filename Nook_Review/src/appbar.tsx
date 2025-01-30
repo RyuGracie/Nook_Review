@@ -43,6 +43,7 @@ export default function Appbar() {
                 <ul className="lg:flex lg:items-end lg:justify-end">
                   <ListItem NavLink="/#">Home</ListItem>
                   <ListItem NavLink="/islands">Islands</ListItem>
+                  <ListItem NavLink={`/${user}/island`}>Your Island</ListItem>
                 </ul>
               </nav>
             </div>
@@ -52,8 +53,6 @@ export default function Appbar() {
                   <p className="px-7 py-3 text-base font-semibold text-white">
                     Welcome {user}!
                   </p>
-
-                  <Button to={`/${user}/island`}>Your Island</Button>
 
                   <Button
                     onClick={() => {

@@ -1,9 +1,10 @@
-import { useLocation, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { Island, Review } from "./client/type";
 import ReviewForm from "./components/review_form";
 import { api } from "./client/client";
 import ReviewTile from "./components/review_tile";
 import { createContext, useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 type IslandPageParams = {
   islandName: string;
@@ -13,17 +14,18 @@ export const IslandContext = createContext<Island | undefined>(undefined);
 
 export default function IslandPage() {
   const { islandName } = useParams<IslandPageParams>();
+  const navigate = useNavigate();
 
   const location = useLocation();
   const island = location.state?.island as Island;
 
-  const [, setRefreshKey] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [disable, setDisable] = useState(false);
 
   const { data: reviews, isLoading } = api.useAllReviews(island);
+  const queryClient = useQueryClient(); // Get the query client
 
-  console.log(island);
-
+  console.log(refreshKey);
   useEffect(() => {
     setDisable(
       (reviews?.some(
@@ -32,7 +34,10 @@ export default function IslandPage() {
         false) ||
         !localStorage.getItem("username"),
     );
-  }, [reviews]);
+    if (localStorage.getItem("username") === island.owner) {
+      navigate(`/${island.owner}/island`);
+    }
+  }, [reviews, island, navigate]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -41,11 +46,11 @@ export default function IslandPage() {
   return (
     <IslandContext.Provider value={island}>
       <div className="flex min-h-screen w-full flex-col items-start justify-start gap-4 bg-sandy p-4 text-slate-900">
-        <div className="item-center flex h-min w-full flex-col rounded-2xl bg-white p-4 text-slate-900 shadow-md shadow-slate-400/50 transition-all duration-150 sm:flex-row">
+        <div className="item-center flex h-min w-full flex-col rounded-2xl bg-white p-4 text-slate-900 shadow-md shadow-slate-400/50 transition-all duration-150 md:flex-row">
           <img
             src={`data:image/jpeg;base64,${island.image}`}
             alt={island.name}
-            className="m-4 aspect-video rounded-xl border-2 object-cover sm:w-2/5"
+            className="m-4 aspect-video rounded-xl border-2 object-cover md:w-2/5"
           />
           <div className="flex h-full flex-col items-start justify-center gap-3 p-4">
             <h1 className="text-3xl font-bold sm:text-4xl lg:text-6xl">
@@ -65,13 +70,20 @@ export default function IslandPage() {
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-row items-start justify-start gap-4">
+        <div className="flex w-full flex-col items-start justify-start gap-4 lg:flex-row">
           <div className="flex h-full flex-col">
             <ReviewForm
               disabled={disable}
               onReviewPosted={() => {
                 setRefreshKey((prev) => prev + 1);
                 setDisable(true);
+
+                queryClient.invalidateQueries({
+                  queryKey: ["reviews", island.id],
+                });
+                queryClient.refetchQueries({
+                  queryKey: ["reviews", island.id],
+                });
               }}
             />
             {disable && (

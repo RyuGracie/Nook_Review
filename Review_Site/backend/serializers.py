@@ -17,30 +17,7 @@ class IslandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Island
         fields = "__all__"
-        
-    def validate_image(self, value):
-        """Validate and process the base64 image data."""
-        if value:
-            try:
-                import base64
-                from io import BytesIO
-                from django.core.files.base import ContentFile
-                from PIL import Image
-
-                # Decode base64 string
-                image_data = base64.b64decode(value)
-                image_file = BytesIO(image_data)
-
-                # Create a temporary image file
-                image = Image.open(image_file)
-                file_name = 'island_image.png'
-                content = ContentFile(image_data, name=file_name)
-
-                return content
-            except Exception as e:
-                raise serializers.ValidationError("Invalid image data.")
-
-        return value
+    
 
 class ReviewSerializer(serializers.ModelSerializer):
     id_island = serializers.PrimaryKeyRelatedField(
@@ -53,9 +30,3 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = "__all__"
-    
-    # def create(self, validated_data):
-    #     review = Review.objects.create(**validated_data)
-    #     review.rating = round((review.aesth_rating + review.motif_rating + review.creat_rating) / 3)
-    #     review.save()
-    #     return review

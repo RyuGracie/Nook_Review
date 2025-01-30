@@ -10,7 +10,7 @@ export default function Islands() {
 
   return (
     <>
-      <div className="min-w-screen bg-sandy flex min-h-screen flex-row flex-wrap items-start justify-center gap-2 p-4 sm:gap-8">
+      <div className="min-w-screen flex min-h-screen flex-row flex-wrap items-start justify-start gap-2 bg-sandy p-4 sm:gap-4 md:gap-8">
         {islands?.map((island) => (
           <IslandTile key={island.dream_code} island={island} />
         ))}

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { api } from "./client/client";
 import Button from "./components/button";
 import { useNavigate, useParams } from "react-router";
@@ -9,9 +10,13 @@ type IslandPageParams = {
 export default function UserIslandPage() {
   const { username } = useParams<IslandPageParams>();
   const navigate = useNavigate();
-  if (!username) {
-    navigate("/login");
-  }
+
+  useEffect(() => {
+    if (!localStorage.getItem("access_token")) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   const { data: islands, isLoading } = api.useAllIslands();
 
   const island = islands?.find((island) => island.owner === username);

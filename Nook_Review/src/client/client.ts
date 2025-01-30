@@ -36,11 +36,19 @@ export const api = {
     useMutation({
       mutationFn: async (review: ReviewFormInput) =>
         await client
-          .post(`/islands/${island.dream_code}/reviews/`, review, {
+          .post(`/islands/${island.dream_code}/create/`, review, {
             headers: {
               Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
             },
           })
+          .then((response) => response.data),
+    }),
+
+  useRequestPasswordReset: () =>
+    useMutation({
+      mutationFn: async (email: string) =>
+        await client
+          .post(`password-reset/`, { email })
           .then((response) => response.data),
     }),
 };

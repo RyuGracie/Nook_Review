@@ -5,7 +5,6 @@ import { api } from "../client/client";
 import { useContext } from "react";
 import { IslandContext } from "../islandPage";
 import { Island } from "../client/type";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface ReviewFormInput {
   aesth_rating: number;
@@ -26,7 +25,6 @@ export default function ReviewForm({
     throw new Error("IslandContext is not available");
   }
   const { mutate: sendReview } = api.useSendReview(island);
-  const queryClient = useQueryClient(); // Get the query client
 
   const {
     control,
@@ -44,14 +42,13 @@ export default function ReviewForm({
       onSuccess: () => {
         console.log("Review sent");
         onReviewPosted();
-        queryClient.invalidateQueries({ queryKey: ["reviews", island.id] });
         reset();
       },
     });
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-md shadow-slate-400/50 transition-all duration-150">
+    <div className="mx-auto flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-md shadow-slate-400/50 transition-all duration-150 md:w-fit">
       <form className="flex flex-row gap-3" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-3">
           <label>Aesthetic Rating:</label>

@@ -13,6 +13,7 @@ import Signup from "./signup.tsx";
 import UserIslandPage from "./usersIsland.tsx";
 import RegisterIsland from "./registerIsland.tsx";
 import UserPage from "./userPage.tsx";
+import ResetPasswordForm from "./components/resetPassword.tsx";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,10 @@ createRoot(document.getElementById("root")!).render(
               <Route path="island" element={<UserIslandPage />} />
               <Route path="register-island" element={<RegisterIsland />} />
             </Route>
+            <Route
+              path="/login/forgot-password"
+              element={<ResetPasswordForm />}
+            />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

@@ -58,6 +58,9 @@ export default function Login() {
             {isPending ? "Logging in..." : "Submit"}
           </Button>
         </form>
+        <Button to="forgot-password" className="text-black">
+          Forgot Password?
+        </Button>
       </div>
     </div>
   );
