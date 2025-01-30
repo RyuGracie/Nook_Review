@@ -19,6 +19,9 @@ class IslandSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class ReviewSerializer(serializers.ModelSerializer):
+    id_island = serializers.PrimaryKeyRelatedField(
+        queryset=Island.objects.all(), required=False  # Make it not required
+    )
     owner = serializers.SlugRelatedField(
         slug_field='username',
         read_only=True

@@ -1,24 +1,53 @@
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import Button from "./button";
 import { Rating } from "react-simple-star-rating";
+import { api } from "../client/client";
+import { useContext } from "react";
+import { IslandContext } from "../islandPage";
+import { Island } from "../client/type";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ReviewFormInput {
   aesth_rating: number;
   motif_rating: number;
   creat_rating: number;
-  review: string;
+  comment: string;
 }
 
-export default function ReviewForm({ disabled }: { disabled: boolean }) {
+export default function ReviewForm({
+  disabled,
+  onReviewPosted,
+}: {
+  disabled: boolean;
+  onReviewPosted: () => void;
+}) {
+  const island: Island | undefined = useContext(IslandContext);
+  if (!island) {
+    throw new Error("IslandContext is not available");
+  }
+  const { mutate: sendReview } = api.useSendReview(island);
+  const queryClient = useQueryClient(); // Get the query client
+
   const {
     control,
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<ReviewFormInput>();
 
-  const onSubmit: SubmitHandler<ReviewFormInput> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<ReviewFormInput> = async (data) => {
+    sendReview(data, {
+      onError: (error) => {
+        console.error(error);
+      },
+      onSuccess: () => {
+        console.log("Review sent");
+        onReviewPosted();
+        queryClient.invalidateQueries({ queryKey: ["reviews", island.id] });
+        reset();
+      },
+    });
   };
 
   return (
@@ -71,7 +100,7 @@ export default function ReviewForm({ disabled }: { disabled: boolean }) {
         <div className="flex flex-col gap-3">
           <label>Review:</label>
           <textarea
-            {...register("review")}
+            {...register("comment")}
             className="h-full rounded-md p-2 ring-1 ring-slate-500"
           />
           <Button

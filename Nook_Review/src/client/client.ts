@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Island, Review } from "./type";
+import { Island, Review, ReviewFormInput } from "./type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const client = axios.create({
@@ -20,12 +20,17 @@ export const api = {
       queryKey: ["reviews", island.dream_code],
     }),
 
-  useSendReview: () => {
-    return useMutation({
-      mutationFn: async (review: Review) =>
-        await client.post("/reviews", review).then((response) => response.data),
-    });
-  },
+  useSendReview: (island: Island) =>
+    useMutation({
+      mutationFn: async (review: ReviewFormInput) =>
+        await client
+          .post(`/islands/${island.dream_code}/reviews/`, review, {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+            },
+          })
+          .then((response) => response.data),
+    }),
 };
 
 function fetcher<TResponse>(url: string): Promise<TResponse> {

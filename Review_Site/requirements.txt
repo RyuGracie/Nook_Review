@@ -5,3 +5,4 @@ django-extensions
 Pillow
 django-cors-headers
 drf-extra-fields
+djangorestframework-simplejwt

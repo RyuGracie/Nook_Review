@@ -17,3 +17,10 @@ export interface Review {
   comment: string;
   date: string;
 }
+
+export interface ReviewFormInput {
+  aesth_rating: number;
+  motif_rating: number;
+  creat_rating: number;
+  comment: string;
+}

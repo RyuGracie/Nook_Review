@@ -1,9 +1,17 @@
-import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Button from "./components/button";
+import { useLogout } from "./client/auth";
+import { useAuth } from "./components/authContext";
+import { useState } from "react";
 
 export default function Appbar() {
   const [open, setOpen] = useState(false);
+
+  const { mutate: logout } = useLogout();
+  const navigate = useNavigate();
+
+  const { user, logoutCont } = useAuth(); // Use context to update auth state
+
   return (
     <header className="flex w-full items-center bg-green-500">
       <>
@@ -41,17 +49,37 @@ export default function Appbar() {
               </nav>
             </div>
             <div className="hidden h-min justify-end text-nowrap pr-16 sm:flex lg:pr-0">
-              <Button
-                to="/#" // This is a placeholder
-              >
-                Sign in
-              </Button>
+              {user ? (
+                <>
+                  <p className="px-7 py-3 text-base font-semibold text-white">
+                    Welcome {user}!
+                  </p>
 
-              <Button
-                to="/#" // This is a placeholder
-              >
-                Sign Up
-              </Button>
+                  <Button
+                    onClick={() => {
+                      logout();
+                      logoutCont();
+                      navigate("/");
+                    }}
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    to="/login" // This is a placeholder
+                  >
+                    Sign in
+                  </Button>
+
+                  <Button
+                    to="/#" // This is a placeholder
+                  >
+                    Sign Up
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
